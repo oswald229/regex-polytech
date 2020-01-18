@@ -296,6 +296,96 @@ foreach ($selection['events'] as $key => $value) {
 }
 
 
-var_dump($selection);
+//var_dump($selection);
 
 
+$test="4A SAGI TD G2";
+$futur_liste_de_noeuds=preg_split('/ /',$test);
+
+
+
+
+/*
+
+$arbre_test= new arbre("arbre");
+
+$tp=new noeud("td",$arbre_test);
+$td=new noeud("tp",$arbre_test);
+$cm=new noeud("cm",$arbre_test);
+var_dump($arbre_test);
+*/
+
+
+
+
+
+
+$parcours_test=[
+
+	'TP'=>[
+		"1"=>[],	//TP 1
+		"2"=>[],	//TP 1
+		"Spe"=>[
+			"1"=>[],	//TP Spe 1
+			"2"=>[]		//TP Spe 2
+		]
+	],
+	'CM'=>[],	//CM
+	'TD'=>[
+		"1"=>[],	//TD1	
+		"2"=>[]		//TD2
+	],
+	
+	'Sport'=>[],	//Sport
+];
+
+function get_or(){
+
+}
+function parcours($tab,$size,$chaine=""){
+
+	
+
+	foreach ($tab as $key=> $value) {
+
+		$_chaine=$chaine.$key." ";
+		$_size=sizeof($value);
+
+		
+		if(sizeof($value)!=0 && ){				
+			$_chaine.="|";
+			parcours($value,sizeof($value),$_chaine);
+			
+		}
+		
+
+		
+		else{
+
+			
+			echo"<h2>".$_chaine."</h2>";
+			
+		}
+		
+	
+	}
+	
+	/*for ($i=0; $i < $size ; $i++) { 
+		
+		if(is_array($tab[$i]) && sizeof($tab[$i])!=0){
+			
+			parcours($tab[$i],sizeof($tab[$i]));
+			
+	
+		}else{
+			echo"<h2>".$tab[$i]."</h2>";
+			
+		}
+
+
+
+	}*/
+	
+}
+
+parcours($parcours_test,sizeof($parcours_test));
