@@ -352,7 +352,7 @@ function parcours($tab,$size,$chaine=""){
 		$_size=sizeof($value);
 
 		
-		if(sizeof($value)!=0 && ){				
+		if(sizeof($value)!=0 && is_array($value)){				
 			$_chaine.="|";
 			parcours($value,sizeof($value),$_chaine);
 			
