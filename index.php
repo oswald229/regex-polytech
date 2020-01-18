@@ -296,6 +296,6 @@ foreach ($selection['events'] as $key => $value) {
 }
 
 
-
+var_dump($selection);
 
 
