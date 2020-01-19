@@ -389,3 +389,11 @@ function parcours($tab,$size,$chaine=""){
 }
 
 parcours($parcours_test,sizeof($parcours_test));
+
+
+
+// Construction de l'expression reg correspondante pour chaque "rang" dans l'arbre.
+
+
+
+
