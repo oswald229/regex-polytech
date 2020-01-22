@@ -178,7 +178,7 @@ function get_matieres($tab){
 	return $communMatiereArray;
 }
 
-function get_types($tab){//$parMatiere['Reseaux industriels']
+function get_types($tab){
 	$communTypeArray=[];
 	foreach ($tab as $value) {
 		$typeCourant=$value->getType();
