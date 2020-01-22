@@ -6,6 +6,7 @@ require 'class/event.php';
 require 'class/noeud.php';
 require 'class/arbre.php';
 
+//blabla
 
 function summary_check($string){
 
