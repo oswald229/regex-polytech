@@ -361,8 +361,7 @@ function parcours($tab,$size,$chaine=""){
 
 		
 		else{
-
-			
+					
 			echo"<h2>".$_chaine."</h2>";
 			
 		}
@@ -385,6 +384,9 @@ function parcours($tab,$size,$chaine=""){
 
 
 	}*/
+
+	
+	
 	
 }
 
@@ -394,6 +396,39 @@ parcours($parcours_test,sizeof($parcours_test));
 
 // Construction de l'expression reg correspondante pour chaque "rang" dans l'arbre.
 
+function label_tab($tab,$size,$label=""){
 
+	
 
+	foreach ($tab as $key=> $value) {
+
+		$_size=sizeof($value);
+		
+		
+		if(sizeof($value)!=0 && is_array($value)){				
+			
+			label_tab($value,sizeof($value),$label);
+			
+		}
+		
+
+		
+		else{
+			$label.="+".$key;
+					
+			echo"<h2>".$label."</h2>";
+			
+		}
+		
+		$label="";
+	}
+	
+	
+
+	
+	
+	
+}
+
+label_tab($parcours_test,sizeof($parcours_test));
 
