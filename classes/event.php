@@ -1,3 +1,4 @@
+
 <?php
 
 //SUMMARY:TP - 319 - Programmation JAVA J2EE - 4A SAGI TD G2
@@ -63,8 +64,5 @@ class event {
     		echo $this->getType()."de ".$this->getMatiere()."en ".$this->getLocalisation.". Groupe : ".$this->getGroupe();
   		}
 
-
-
-
-
 }
+?>
