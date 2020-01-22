@@ -26,30 +26,13 @@ require 'process/functions.php';
 <h2>Regex Project</h2>
 <br>
 
-
-
-
-
-
-
-
-
-
-
-
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">Lien ics</span>
   </div>
   <input type="text" class="form-control" placeholder="Url ics" aria-describedby="basic-addon1">
 </div>
-
-
-
 <br>
-
-
-
 
 
 
@@ -68,8 +51,6 @@ require 'process/functions.php';
 <button type="button" class="btn btn-primary">Get selection</button>
 
 <br>
-
-
 
 
 
