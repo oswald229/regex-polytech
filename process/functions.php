@@ -95,7 +95,7 @@ function replace_diff($s1,$s2){
 }
 
 function parse_fichier($nom_fichier){
-	echo "<h2>Regex Project</h2>";
+	
 	$events_array = [];
 	
 	$timetable = fopen($nom_fichier, "r");//"timetable (copie).txt"
