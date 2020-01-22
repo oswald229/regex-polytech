@@ -16,7 +16,7 @@
         }
 
         function add_noeud_niveau_0($noeud){
-            $_noeud_racine->add_fils($noeud);
+            $this->$_noeud_racine->add_fils($noeud);
         }
 
         function get_noeud_racine(){
