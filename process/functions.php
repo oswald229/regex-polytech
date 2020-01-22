@@ -1,10 +1,13 @@
 <?php
+<<<<<<< HEAD
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 require './classes/event.php';
 require 'classes/noeud.php';
 require 'classes/arbre.php';
+=======
+>>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
 
 function summary_check($string){
 
@@ -101,7 +104,11 @@ function replace_diff($s1,$s2){
 }
 
 function parse_fichier($nom_fichier){
+<<<<<<< HEAD
 	echo "<h2>Regex Project</h2>";
+=======
+	
+>>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
 	$events_array = [];
 	
 	$timetable = fopen($nom_fichier, "r");//"timetable (copie).txt"
@@ -178,7 +185,11 @@ function get_matieres($tab){
 	return $communMatiereArray;
 }
 
+<<<<<<< HEAD
 function get_types($tab){//$parMatiere['Reseaux industriels']
+=======
+function get_types($tab){
+>>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
 	$communTypeArray=[];
 	foreach ($tab as $value) {
 		$typeCourant=$value->getType();
@@ -258,6 +269,7 @@ function get_regexp($tab){
 	$matieres = get_matieres($tab);
 	$arbre_matiere = new arbre("Arbre Matière", null);
 	add_to_arbre($arbre_matiere, $matieres);
+<<<<<<< HEAD
 	$types = get_types($tab);
 	$arbre_type = new arbre("Arbre Type", null);
 	add_to_arbre($arbre_type, $types);
@@ -368,3 +380,21 @@ echo "Liste noeuds";
 var_dump($arbre->get_liste_noeuds());
 
 var_dump($communLocalisationArray);*/
+=======
+
+	$types = get_types($tab);
+	$arbre_type = new arbre("Arbre Type", null);
+	add_to_arbre($arbre_type, $types);
+
+	$groupes = get_groupes($tab);
+	$arbre_groupe = new arbre("Arbre Groupe", null);
+	add_to_arbre($arbre_groupe, $groupes);
+
+	$localisations = get_localisations($tab);
+	$arbre_localisation = new arbre("Arbre Localisation", null);
+	add_to_arbre($arbre_localisation, $localisations);
+	
+	$regex = $regex . $arbre_type->get_regexp() . " - " . $arbre_localisation->get_regexp() . " - " . $arbre_matiere->get_regexp() . " - " . $arbre_groupe->get_regexp();
+	return $regex;
+}
+>>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
