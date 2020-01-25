@@ -94,7 +94,6 @@
     <script src="js/plugins.js"></script>
     <script src="js/gijgo.min.js"></script>
 
-    <!--contact js-->
     <script src="js/contact.js"></script>
     <script src="js/jquery.ajaxchimp.min.js"></script>
     <script src="js/jquery.form.js"></script>
