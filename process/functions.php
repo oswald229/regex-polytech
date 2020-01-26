@@ -2,9 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
-require '../classes/event.php';
-require '../classes/noeud.php';
-require '../classes/arbre.php';
+require 'classes/event.php';
+require 'classes/noeud.php';
+require 'classes/arbre.php';
 /**
  * Vérifie si une ligne est un SUMMARY
  * @param string Indique la chaîne de caractères à analyser
@@ -107,7 +107,6 @@ function replace_diff($s1,$s2){
  * @param nom_fichier Indique le nom du fichier à analyser
  */
 function parse_fichier($nom_fichier){
-	echo "<h2>Regex Project</h2>";
 	$events_array = [];
 	
 	$timetable = fopen($nom_fichier, "r");//"timetable (copie).txt"
@@ -302,8 +301,18 @@ function get_regexp($tab){
 	return $regex;
 }
 
+function count_slash($chaine){
+	$compteur=0;
+	for($i=0;$i<strlen($chaine);$i++){
+		if($chaine[$i]=='/' || $chaine[$i]=='\\'){
+			$compteur++;
+		}
+	}
+	return $compteur;
+}
 
-$events_array = parse_fichier("../file/timetable (copie).txt");
+/*
+$events_array = parse_fichier("file/timetable (copie).txt");
 
 $parMatiere = get_par_matiere($events_array);
 
@@ -315,6 +324,6 @@ echo $regex;
 echo "<h3>Regexp Securite informatique</h3>";
 $regex = get_regexp($parMatiere['Securite informatique']);
 
-echo $regex;
+echo $regex;*/
 
 ?>

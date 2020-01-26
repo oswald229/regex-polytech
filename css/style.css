@@ -1,0 +1,41 @@
+.sph-col-titre{
+    display: table !important;
+    height: 50px !important;
+    background-color: lightgray;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-image: linear-gradient(to right, rgb(255, 255, 255), rgb(9, 72, 118));
+}
+
+.sph-col-titre h3, .sph-col-titre img{
+    text-align: center !important;
+    display: table-cell !important;
+    vertical-align: middle !important;
+    font-family: 'ZCOOL QingKe HuangYou', cursive;
+    
+}
+
+.sph-col-titre img{
+    width: 98% !important;
+}
+
+.sph-col-titre h3{
+    width: 50% !important;
+    background-color: #009FE3;
+    color: white !important;
+}
+
+.sph-row{
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.sph-col-textarea textarea{
+    width : 100% !important;
+}
+
+.sph-col-select select{
+    width : 100% !important;
+}
