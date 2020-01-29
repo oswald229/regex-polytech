@@ -1,10 +1,21 @@
 <?php
+    /**
+     * Cette classe permet de créer une arbre avec un noeud racine dont le libellé est donnée en argument
+     */
     class arbre{
-
+        /**
+         * Indique le noeud racine de l'arbre
+         */
         private $_noeud_racine;
-
+        /**
+         * Indique la liste des noeuds composant l'arbre dans un ordre aléatoire
+         */
         private $_liste_noeuds;
-
+        /**
+         * Le constructeur de l'arbre
+         * @param nom_arbre Le nom de l'arbre qui sera le nom du noeud racine
+         * @param noeuds_niveau_0 Une liste éventuelle de noeuds de niveau 0, fils du noeud racine
+         */
         function __construct($nom_arbre, $noeuds_niveau_0=null){
             $this->_noeud_racine = new noeud($nom_arbre, null);
             $this->_noeud_racine->set_rang(-1);
@@ -18,16 +29,25 @@
                 }
             }
         }
-
+        /**
+         * Permet d'ajouter un noeud de niveau 0 comme fils du noeud racine
+         * @param noeud Indique le noeud à ajouter
+         */
         function add_noeud_niveau_0($noeud){
             $this->_noeud_racine->add_fils($noeud);
             if($noeud->get_parent()!=null || $noeud->get_fils()!=null)  array_push($this->_liste_noeuds, $noeud);
         }
-
+        /**
+         * Permet de récupérer le noeud racine, en occurence, tout l'arbre
+         */
         function get_noeud_racine(){
             return $this->_noeud_racine;
         }
-
+        /**
+         * Permet d'ajouter un noeud à une position définie par une séquence donnée dans l'arbre
+         * @param tab L'unique séquence après laquelle le noeud doit être ajouté
+         * @param noeud Le noeud à ajouter
+         */
         function add_node($tab, $noeud){
             $i=0;
             $noeud_temp = $this->_noeud_racine;
@@ -47,11 +67,15 @@
                 if($noeud->get_parent()!=null || $noeud->get_fils()!=null)  array_push($this->_liste_noeuds, $noeud);
             }
         }
-
+        /**
+         * Permet de récupérer la liste des noeuds composants l'arbre
+         */
         function get_liste_noeuds(){
             return $this->_liste_noeuds;
         }
-
+        /**
+         * Permet de récupérer le rang (ou niveau) maximal de l'arbre compté à partir de -1 comme rang du noeud racine
+         */
         function get_rang_max(){
             $tab = $this->get_liste_noeuds();
             $max = $tab[0]->get_rang();
@@ -62,14 +86,18 @@
             }
             return $max;
         }
-
+        /**
+         * Permet d'afficher l'arbre
+         */
         function afficher(){
             $noeud_temp = $this->_noeud_racine;
             while($noeud_temp->get_fils!=null){
                 var_dump($noeud_temp);
             }
         }
-
+        /**
+         * Permet de générer l'expression régulière de tout l'arbre en ne tenant pas compte du noeud racine
+         */
         function get_regexp(){
             $fils = $this->_noeud_racine->get_fils();
             $regex="";

@@ -1,14 +1,14 @@
 <?php
-<<<<<<< HEAD
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
-require './classes/event.php';
+require 'classes/event.php';
 require 'classes/noeud.php';
 require 'classes/arbre.php';
-=======
->>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
-
+/**
+ * Vérifie si une ligne est un SUMMARY
+ * @param string Indique la chaîne de caractères à analyser
+ */
 function summary_check($string){
 
 	$test="";
@@ -102,13 +102,11 @@ function replace_diff($s1,$s2){
 
 	return $ret;
 }
-
+/**
+ * Permet de lire un fichier, chercher la ligne SUMMARY, découper la chaîne de SUMMARY en 4 sections (localisation, type, matiere, groupe) pour retourner une liste d'events_array
+ * @param nom_fichier Indique le nom du fichier à analyser
+ */
 function parse_fichier($nom_fichier){
-<<<<<<< HEAD
-	echo "<h2>Regex Project</h2>";
-=======
-	
->>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
 	$events_array = [];
 	
 	$timetable = fopen($nom_fichier, "r");//"timetable (copie).txt"
@@ -154,7 +152,10 @@ function parse_fichier($nom_fichier){
 	}
 	return $events_array;
 }
-
+/**
+ * Permet de trier un tableau d'events et de récupérer les events ayant le même nom de matière
+ * @param tab Indique le tableau d'events à trier
+ */
 function get_par_matiere($tab){
 	$parMatiere=[];
 
@@ -170,7 +171,10 @@ function get_par_matiere($tab){
 	}
 	return $parMatiere;
 }
-
+/**
+ * Permet de récupérer les matières de tous les events d'une liste d'events. La récupération se fait à manière à ce qu'il n'y ait pas de doublure
+ * @param tab Indique la liste d'events
+ */
 function get_matieres($tab){
 	$communMatiereArray=[];
 	foreach ($tab as $value) {
@@ -184,12 +188,11 @@ function get_matieres($tab){
 	}
 	return $communMatiereArray;
 }
-
-<<<<<<< HEAD
+/**
+ * Permet de récupérer les types (TD ou autres) de tous les events d'une liste d'events. La récupération se fait à manière à ce qu'il n'y ait pas de doublure
+ * @param tab Indique la liste d'events
+ */
 function get_types($tab){//$parMatiere['Reseaux industriels']
-=======
-function get_types($tab){
->>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
 	$communTypeArray=[];
 	foreach ($tab as $value) {
 		$typeCourant=$value->getType();
@@ -202,7 +205,10 @@ function get_types($tab){
 	}
 	return $communTypeArray;
 }
-
+/**
+ * Permet de récupérer les groupes de tous les events d'une liste d'events. La récupération se fait à manière à ce qu'il n'y ait pas de doublure
+ * @param tab Indique la liste d'events
+ */
 function get_groupes($tab){
 	$communGroupeArray=[];
 	foreach ($tab as $value) {
@@ -216,7 +222,10 @@ function get_groupes($tab){
 	}
 	return $communGroupeArray;
 }
-
+/**
+ * Permet de récupérer les localisations (salles) de tous les events d'une liste d'events. La récupération se fait à manière à ce qu'il n'y ait pas de doublure
+ * @param tab Indique la liste d'events
+ */
 function get_localisations($tab){
 	$communLocalisationArray=[];
 	foreach ($tab as $value) {
@@ -230,7 +239,10 @@ function get_localisations($tab){
 	}
 	return $communLocalisationArray;
 }
-
+/**
+ * Permet de spliter chaque composant d'un tableau par l'espace
+ * @param tab Indique le tableau à spliter
+ */
 function split_par_espace($tab){
 	$tab_splitte = [];
 	$i=0;
@@ -245,7 +257,11 @@ function split_par_espace($tab){
 	}
 	return $tab_splitte;
 }
-
+/**
+ * Permet de convertir un tableau en arbre en tenant compte de l'unicité de chaque élément à chaque rang de l'arbre et en découpant les éléments (chaînes de caractères) contenant d'espace
+ * @param arbre Indique l'arbre à générer
+ * @param tab Indique le tableau à convertir
+ */
 function add_to_arbre($arbre, $tab){
 	$tab_splitte = split_par_espace($tab);
 	for($i=0; $i<count($tab_splitte); $i++){
@@ -263,13 +279,15 @@ function add_to_arbre($arbre, $tab){
 		}
 	}
 }
-
+/**
+ * Permet de générer une expression régulière à partir d'une liste d'events
+ * @param tab Indique la liste d'events
+ */
 function get_regexp($tab){
 	$regex = "^";
 	$matieres = get_matieres($tab);
 	$arbre_matiere = new arbre("Arbre Matière", null);
 	add_to_arbre($arbre_matiere, $matieres);
-<<<<<<< HEAD
 	$types = get_types($tab);
 	$arbre_type = new arbre("Arbre Type", null);
 	add_to_arbre($arbre_type, $types);
@@ -283,8 +301,18 @@ function get_regexp($tab){
 	return $regex;
 }
 
+function count_slash($chaine){
+	$compteur=0;
+	for($i=0;$i<strlen($chaine);$i++){
+		if($chaine[$i]=='/' || $chaine[$i]=='\\'){
+			$compteur++;
+		}
+	}
+	return $compteur;
+}
 
-/*$events_array = parse_fichier("file/timetable (copie).txt");
+/*
+$events_array = parse_fichier("file/timetable (copie).txt");
 
 $parMatiere = get_par_matiere($events_array);
 
@@ -298,103 +326,4 @@ $regex = get_regexp($parMatiere['Securite informatique']);
 
 echo $regex;*/
 
-// Matiere Regex	
-// .*(Reseaux industriels).* 	
-/*$regMatiere="";
-
-echo "Par matiere";
-
-var_dump($parMatiere['Reseaux industriels']);
-
-/*
-
-var_dump($communMatiereArray);*/
-
-// Type Regex
-/*$regType="";
-
-$communTypeArray = get_types($parMatiere['Reseaux industriels']);
-/**
- * Faire un tableau avec les mots differents : 
- * [TP, TP spe, CM ,Contrôle continu ]
- * 
- * Au moins 2 caracters en commun.
- */
-
-	/*for ($i=0; $i < sizeof($communTypeArray) ; $i++) { 
-		
-		if(isset($communTypeArray[$i+1])){
-			$com=check_commun($communTypeArray[$i],$communTypeArray[$i+1]);
-			
-			if($com>=2){
-				$regType=replace_diff($communTypeArray[$i],$communTypeArray[$i+1]);
-
-			}
-		}
-	}*/
-
-
-/*var_dump($communTypeArray);
-var_dump($regType);
-// Groupe Regex
-$regGroupe="";
-
-$communGroupeArray = get_groupes($parMatiere['Reseaux industriels']);
-
-$arbre_groupe = new arbre("Arbre Groupe", null);
-
-add_to_arbre($arbre_groupe, $communGroupeArray);
-
-echo "Mon arbre groupe";
-var_dump($arbre_groupe);
-
-echo "Rang max groupe";
-var_dump($arbre_groupe->get_rang_max());
-
-var_dump($communGroupeArray);
-// Localisation Regex
-
-$regLocalisation="";
-
-$communLocalisationArray = get_localisations($parMatiere['Reseaux industriels']);
-
-$arbre = new arbre("Arbre Localisation", null);
-
-add_to_arbre($arbre, $communLocalisationArray);
-
-$fils = $arbre->get_noeud_racine()->get_fils();
-echo "Mon arbre localisation";
-var_dump($arbre);
-
-echo "Mon regexp localisation";
-var_dump($arbre->get_regexp());
-
-echo "Rang max localisation";
-var_dump($arbre->get_rang_max());
-
-echo "Mes fils";
-
-var_dump($fils[5]->get_fils());
-
-echo "Liste noeuds";
-var_dump($arbre->get_liste_noeuds());
-
-var_dump($communLocalisationArray);*/
-=======
-
-	$types = get_types($tab);
-	$arbre_type = new arbre("Arbre Type", null);
-	add_to_arbre($arbre_type, $types);
-
-	$groupes = get_groupes($tab);
-	$arbre_groupe = new arbre("Arbre Groupe", null);
-	add_to_arbre($arbre_groupe, $groupes);
-
-	$localisations = get_localisations($tab);
-	$arbre_localisation = new arbre("Arbre Localisation", null);
-	add_to_arbre($arbre_localisation, $localisations);
-	
-	$regex = $regex . $arbre_type->get_regexp() . " - " . $arbre_localisation->get_regexp() . " - " . $arbre_matiere->get_regexp() . " - " . $arbre_groupe->get_regexp();
-	return $regex;
-}
->>>>>>> 94249ddcd297d035ff11545378eecd547d277f3a
+?>
