@@ -45,16 +45,13 @@ function location_check($string){
 }
 
 function check_commun($s1,$s2){
-	
 	$size=min( strlen($s1), strlen($s2)	);
-
 	$commun=0;
 	for ($i=0; $i <$size ; $i++) { 
 		if($s1[$i]===$s2[$i]){
 			$commun++;
 		}
 	}
-
 	return $commun;
 }
 
@@ -74,7 +71,6 @@ function get_longer_string($s1,$s2){
 		$ret["short"]=$s1;
 		$ret["longer_size"]=strlen($s2);
 	}
-
 	return $ret;
 }
 
@@ -108,47 +104,42 @@ function replace_diff($s1,$s2){
  */
 function parse_fichier($nom_fichier){
 	$events_array = [];
-	
-	$timetable = fopen($nom_fichier, "r");//"timetable (copie).txt"
-	if ($timetable) {
-		$i=0;
-		while (($line = fgets($timetable, 4096)) !== false) {
-	
+	if(!is_null($nom_fichier)||!is_empty($nom_fichier)){
+		$timetable = fopen($nom_fichier, "r");//"timetable (copie).txt"
+		
+		if ($timetable) {
+			$i=0;
+				while (($line = fgets($timetable, 4096)) !== false) {
+					if(summary_check($line)){
+						//echo $line."<br>";
+						//SUMMARY:TD - 118 - Communication - 4A SAGI TD G2 
+						$splitted=preg_split("/:/",$line);
+						$splitted_=preg_split("/-/",$splitted[1]);
+						//var_dump($splitted_);
+						$events_array[$i] = new event(
+							$splitted_[1],
+							$splitted_[0],
+							$splitted_[2],
+							$splitted_[3]
+						);	
+						$i++;
+					}
+					//$localisation, $type, $matiere, $groupe
+				//	0 => string 'TP spe ' (length=7)
+				//	1 => string ' Hall technologie CFAO, Hall technologie chaîne de production ' (length=63)
+				//	2 => string ' Supervision industrielle ' (length=26)
+				//	3 => string ' 4A SAGI TP G2
+					if(location_check($line)){
+						//echo $line."<br>";
+						//LOCATION:118
+					}
+				}
+				if (!feof($timetable)) {
+					echo "Erreur: fgets() a échoué\n";
+				}
 			
-			if(summary_check($line)){
-				//echo $line."<br>";
-				//SUMMARY:TD - 118 - Communication - 4A SAGI TD G2 
-				$splitted=preg_split("/:/",$line);
-				$splitted_=preg_split("/-/",$splitted[1]);
-				//var_dump($splitted_);
-				$events_array[$i] = new event(
-					$splitted_[1],
-					$splitted_[0],
-					$splitted_[2],
-					$splitted_[3]
-				);
-				
-				$i++;
-	
-				
-			}
-			//$localisation, $type, $matiere, $groupe
-		//	0 => string 'TP spe ' (length=7)
-		//	1 => string ' Hall technologie CFAO, Hall technologie chaîne de production ' (length=63)
-		//	2 => string ' Supervision industrielle ' (length=26)
-		//	3 => string ' 4A SAGI TP G2
-		  
-	
-	
-			if(location_check($line)){
-				//echo $line."<br>";
-				//LOCATION:118
-			}
+			fclose($timetable);
 		}
-		if (!feof($timetable)) {
-			echo "Erreur: fgets() a échoué\n";
-		}
-		fclose($timetable);
 	}
 	return $events_array;
 }
@@ -158,33 +149,51 @@ function parse_fichier($nom_fichier){
  */
 function get_par_matiere($tab){
 	$parMatiere=[];
-
-	foreach ($tab as $key => $event) {
-	
-		if(!array_key_exists($event->getMatiere(),$parMatiere)){
-			$parMatiere[$event->getMatiere()]=[];
-			array_push($parMatiere[$event->getMatiere()],$event);
-		}else{
-			array_push($parMatiere[$event->getMatiere()],$event);
+	if(!is_null($tab) || !is_empty($tab)){
+		foreach ($tab as $key => $event) {
+			$tab_keys = array_keys($parMatiere);
+			if(!check_array($tab_keys, $event->getMatiere())){
+				$parMatiere[to_case_and_accent_insensitive($event->getMatiere())]=[];
+				array_push($parMatiere[to_case_and_accent_insensitive($event->getMatiere())],$event);
+			}else{
+				array_push($parMatiere[to_case_and_accent_insensitive($event->getMatiere())],$event);
+			} 
 		}
-		 
 	}
 	return $parMatiere;
 }
+
+function to_case_and_accent_insensitive($string){
+	$temp_string = strtolower($string);
+	$trans = array("é" => "e", "&eacute;" => "e", "&aacute;" => "a", "á" => "a", "&iacute;" => "i","í"=>"i", "ó"=>"o", "&oacute;" => "o", "&uacute;" => "u", "ú"=>"u","&ouml;" => "u", "ü"=>"u", "et" => "&", " "=>"");
+	$temp_string = strtr($temp_string,$trans);
+	return $temp_string;
+}
+
+function check_array($array, $string){
+	$temp_string = to_case_and_accent_insensitive($string);
+	foreach($array as $val){
+		$temp_val = to_case_and_accent_insensitive($val);
+	   if(strcasecmp($temp_val, $temp_string ) == 0){
+		  return true;
+	   }
+	}
+	return false;
+ }
+
 /**
- * Permet de récupérer les matières de tous les events d'une liste d'events. La récupération se fait à manière à ce qu'il n'y ait pas de doublure
+ * Permet de récupérer les matières de tous les events d'une liste d'events. La récupération se fait de manière à ce qu'il n'y ait pas de doublure
  * @param tab Indique la liste d'events
  */
 function get_matieres($tab){
 	$communMatiereArray=[];
-	foreach ($tab as $value) {
-		$matiereCourant=$value->getMatiere();
-	
-		if(array_search($matiereCourant,$communMatiereArray)===false){
-			
-			array_push($communMatiereArray,$matiereCourant);
+	if(!is_null($tab) || !is_empty($tab)){
+		foreach ($tab as $value) {
+			$matiereCourant=$value->getMatiere();
+			if(!check_array($communMatiereArray, $matiereCourant)){//array_search(strtolower($matiereCourant),array_map('strtolower', $communMatiereArray)
+				array_push($communMatiereArray,$matiereCourant);
+			}
 		}
-		
 	}
 	return $communMatiereArray;
 }
@@ -194,14 +203,16 @@ function get_matieres($tab){
  */
 function get_types($tab){//$parMatiere['Reseaux industriels']
 	$communTypeArray=[];
-	foreach ($tab as $value) {
-		$typeCourant=$value->getType();
-	
-		if(array_search($typeCourant,$communTypeArray)===false){
-			
-			array_push($communTypeArray,$typeCourant);
-		}
+	if(!is_null($tab) || !is_empty($tab)){
+		foreach ($tab as $value) {
+			$typeCourant=$value->getType();
 		
+			if(array_search($typeCourant,$communTypeArray)===false){
+				
+				array_push($communTypeArray,$typeCourant);
+			}
+			
+		}
 	}
 	return $communTypeArray;
 }
@@ -211,14 +222,16 @@ function get_types($tab){//$parMatiere['Reseaux industriels']
  */
 function get_groupes($tab){
 	$communGroupeArray=[];
-	foreach ($tab as $value) {
-		$groupeCourant=$value->getGroupe();
-	
-		if(array_search($groupeCourant,$communGroupeArray)===false){
-			
-			array_push($communGroupeArray,$groupeCourant);
-		}
+	if(!is_null($tab) || !is_empty($tab)){
+		foreach ($tab as $value) {
+			$groupeCourant=$value->getGroupe();
 		
+			if(array_search($groupeCourant,$communGroupeArray)===false){
+				
+				array_push($communGroupeArray,$groupeCourant);
+			}
+			
+		}
 	}
 	return $communGroupeArray;
 }
@@ -228,14 +241,15 @@ function get_groupes($tab){
  */
 function get_localisations($tab){
 	$communLocalisationArray=[];
-	foreach ($tab as $value) {
-		$localisationCourant=$value->getLocalisation();
-	
-		if(array_search($localisationCourant,$communLocalisationArray)===false){
-			
-			array_push($communLocalisationArray,$localisationCourant);
-		}
+	if(!is_null($tab) || !is_empty($tab)){
+		foreach ($tab as $value) {
+			$localisationCourant=$value->getLocalisation();
 		
+			if(array_search($localisationCourant,$communLocalisationArray)===false){
+				array_push($communLocalisationArray,$localisationCourant);
+			}
+			
+		}
 	}
 	return $communLocalisationArray;
 }
@@ -246,14 +260,16 @@ function get_localisations($tab){
 function split_par_espace($tab){
 	$tab_splitte = [];
 	$i=0;
-	foreach($tab as $val){
-		$split_temp = explode(" ", $val);
-		array_push($tab_splitte, []);
-		foreach($split_temp as $val_2){
-			array_push($tab_splitte[$i], $val_2);
+	if(!is_null($tab) || !is_empty($tab)){
+		foreach($tab as $val){
+			$split_temp = explode(" ", $val);
+			array_push($tab_splitte, []);
+			foreach($split_temp as $val_2){
+				array_push($tab_splitte[$i], $val_2);
+			}
+			array_push($tab_splitte[$i], "");
+			$i++;
 		}
-		array_push($tab_splitte[$i], "");
-		$i++;
 	}
 	return $tab_splitte;
 }
@@ -263,19 +279,21 @@ function split_par_espace($tab){
  * @param tab Indique le tableau à convertir
  */
 function add_to_arbre($arbre, $tab){
-	$tab_splitte = split_par_espace($tab);
-	for($i=0; $i<count($tab_splitte); $i++){
-		$noeud = new noeud($tab_splitte[$i][0], null);
-		$arbre->add_noeud_niveau_0($noeud);
-	}
-	for($i=0; $i<count($tab_splitte); $i++){
-		for($j=1; $j<count($tab_splitte[$i]); $j++){
-			$tab_temp = [];
-			for($k=0; $k<$j; $k++){
-				array_push($tab_temp, $tab_splitte[$i][$k]);
+	if(!is_null($tab) || !is_empty($tab)){
+		$tab_splitte = split_par_espace($tab);
+		for($i=0; $i<count($tab_splitte); $i++){
+			$noeud = new noeud($tab_splitte[$i][0], null);
+			$arbre->add_noeud_niveau_0($noeud);
+		}
+		for($i=0; $i<count($tab_splitte); $i++){
+			for($j=1; $j<count($tab_splitte[$i]); $j++){
+				$tab_temp = [];
+				for($k=0; $k<$j; $k++){
+					array_push($tab_temp, $tab_splitte[$i][$k]);
+				}
+				$noeud = new noeud($tab_splitte[$i][$j], null);
+				$arbre->add_node($tab_temp, $noeud);
 			}
-			$noeud = new noeud($tab_splitte[$i][$j], null);
-			$arbre->add_node($tab_temp, $noeud);
 		}
 	}
 }
@@ -285,19 +303,21 @@ function add_to_arbre($arbre, $tab){
  */
 function get_regexp($tab){
 	$regex = "^";
-	$matieres = get_matieres($tab);
-	$arbre_matiere = new arbre("Arbre Matière", null);
-	add_to_arbre($arbre_matiere, $matieres);
-	$types = get_types($tab);
-	$arbre_type = new arbre("Arbre Type", null);
-	add_to_arbre($arbre_type, $types);
-	$groupes = get_groupes($tab);
-	$arbre_groupe = new arbre("Arbre Groupe", null);
-	add_to_arbre($arbre_groupe, $groupes);
-	$localisations = get_localisations($tab);
-	$arbre_localisation = new arbre("Arbre Localisation", null);
-	add_to_arbre($arbre_localisation, $localisations);
-	$regex = $regex . $arbre_type->get_regexp() . " - " . $arbre_localisation->get_regexp() . " - " . $arbre_matiere->get_regexp() . " - " . $arbre_groupe->get_regexp();
+	if(!is_null($tab) || !is_empty($tab)){
+		$matieres = get_matieres($tab);
+		$arbre_matiere = new arbre("Arbre Matière", null);
+		add_to_arbre($arbre_matiere, $matieres);
+		$types = get_types($tab);
+		$arbre_type = new arbre("Arbre Type", null);
+		add_to_arbre($arbre_type, $types);
+		$groupes = get_groupes($tab);
+		$arbre_groupe = new arbre("Arbre Groupe", null);
+		add_to_arbre($arbre_groupe, $groupes);
+		$localisations = get_localisations($tab);
+		$arbre_localisation = new arbre("Arbre Localisation", null);
+		add_to_arbre($arbre_localisation, $localisations);
+		$regex = $regex . $arbre_type->get_regexp() . " - " . $arbre_localisation->get_regexp() . " - " . $arbre_matiere->get_regexp() . " - " . $arbre_groupe->get_regexp();
+	}
 	return $regex;
 }
 
@@ -311,8 +331,8 @@ function count_slash($chaine){
 	return $compteur;
 }
 
-/*
-$events_array = parse_fichier("file/timetable (copie).txt");
+
+/*$events_array = parse_fichier("file/timetable (copie).txt");
 
 $parMatiere = get_par_matiere($events_array);
 

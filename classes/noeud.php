@@ -161,8 +161,10 @@
                             for($i=0;$i<$this->_occurence-1; $i++){
                                 $fils = $fils[0]->get_fils();
                             }
-                            $reg_fils = $fils[0]->get_regexp();
-                            if(strcmp($reg_fils, "")!=0)    $regex = $regex . " ". $reg_fils;
+                            if(!is_null($fils[0])){
+                                $reg_fils = $fils[0]->get_regexp();
+                                if(strcmp($reg_fils, "")!=0)    $regex = $regex . " ". $reg_fils;
+                            }
                         }
                     }    
                 }else if(count($fils)>1){

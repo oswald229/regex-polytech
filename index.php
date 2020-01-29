@@ -45,7 +45,9 @@ if(strlen($path)!=0){
         $matieres = get_matieres($events_array);
         if(isset($_POST['matiere-select']) && strlen($_POST['matiere-select'])!=0){
             $matiere = $_POST['matiere-select'];
-            $regex = get_regexp($parMatiere[$matiere]);
+            if(isset($parMatiere[to_case_and_accent_insensitive($matiere)])){
+                $regex = get_regexp($parMatiere[to_case_and_accent_insensitive($matiere)]);
+            }
         }
     }
 }
@@ -82,11 +84,15 @@ if(strlen($path)!=0){
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-10 col-md-8 col-lg-6">
                     <form id="regex-form" enctype="multipart/form-data" method="post" action="#">
-                        <input type="text" id="file_path" name="file_path" value=""/>
-                        <input type="file" id="file" name="file" accept="text/plain" style="display:none;"/>
-                        <button type="button" id="bouton">Parcourir</button>
-                        <input type="hidden" name="file_path_hidden" value="<?php if(!is_null($path)){ echo $path; }?>"/>
-                        <input id="regex-submit" type="submit" name="submit_button" value="Envoyer"/>
+                        <div class="row">
+                            <input type="text" id="file_path" class="form-control col-8" name="file_path" value=""/>
+                            <input type="file" id="file" name="file" accept="text/plain" style="display:none;"/>
+                            <button type="button" id="bouton" class="form-control col-4">Parcourir</button>
+                        </div>
+                        <div class="row sph-row-buttons">
+                            <input type="hidden" name="file_path_hidden" value="<?php if(!is_null($path)){ echo $path; }?>"/>
+                            <input id="regex-submit" type="submit" class="form-control col-12btn btn-secondary" name="submit_button" value="Générer l'expression régulière"/>
+                        </div>
                     </form>
                 </div>
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
@@ -94,24 +100,29 @@ if(strlen($path)!=0){
             <div class="row sph-row">
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-10 col-md-8 col-lg-6 sph-col-select">
-                    <select name="matiere-select" id="matiere-select" form="regex-form">
-                        <?php
-                            if($matieres!=null){
-                                for($i=0; $i<count($matieres); $i++){
-                                    ?>
-                                    <option value="<?php echo $matieres[$i]; ?>"><?php echo $matieres[$i]; ?></option>
-                                    <?php
+                    <div class="row">
+                    <label>Trier par matière</label>
+                        <select name="matiere-select" class="form-control col-12" id="matiere-select" form="regex-form">
+                            <?php
+                                if($matieres!=null){
+                                    for($i=0; $i<count($matieres); $i++){
+                                        ?>
+                                        <option value="<?php echo $matieres[$i]; ?>"><?php echo $matieres[$i]; ?></option>
+                                        <?php
+                                    }
                                 }
-                            }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
             </div>
             <div class="row sph-row">
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-10 col-md-8 col-lg-6 sph-col-textarea">
-                    <textarea name="regex-textarea" rows="10" cols="50"><?php if($regex!=null){ echo $regex; } ?></textarea>
+                    <div class="row">
+                        <textarea name="regex-textarea" class="form-control" rows="10" cols="50"><?php if($regex!=null){ echo $regex; } ?></textarea>
+                    </div>
                 </div>
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
             </div>

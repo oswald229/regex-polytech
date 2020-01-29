@@ -39,3 +39,12 @@
 .sph-col-select select{
     width : 100% !important;
 }
+
+.sph-row-buttons{
+    padding-top: 10px;
+}
+
+.sph-col-submit-button{
+    background-color: #009FE3;
+    color: white;
+}
