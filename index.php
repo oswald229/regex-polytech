@@ -81,12 +81,12 @@ if(strlen($path)!=0){
             <div class="row sph-row">
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-10 col-md-8 col-lg-6">
-                    <form id="regex-form" enctype="multipart/form-data" method="post" action="#">
-                        <input type="text" id="file_path" name="file_path" value=""/>
+                    <form id="regex-form" class="row" enctype="multipart/form-data" method="post" action="#">
+                        <input type="text" id="file_path" class="form-control col-4" name="file_path" value=""/>
                         <input type="file" id="file" name="file" accept="text/plain" style="display:none;"/>
-                        <button type="button" id="bouton">Parcourir</button>
+                        <button type="button" id="bouton" class="form-control col-4">Parcourir</button>
                         <input type="hidden" name="file_path_hidden" value="<?php if(!is_null($path)){ echo $path; }?>"/>
-                        <input id="regex-submit" type="submit" name="submit_button" value="Envoyer"/>
+                        <input id="regex-submit" type="submit" class="form-control col-4" name="submit_button" value="Envoyer"/>
                     </form>
                 </div>
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
@@ -94,24 +94,28 @@ if(strlen($path)!=0){
             <div class="row sph-row">
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-10 col-md-8 col-lg-6 sph-col-select">
-                    <select name="matiere-select" id="matiere-select" form="regex-form">
-                        <?php
-                            if($matieres!=null){
-                                for($i=0; $i<count($matieres); $i++){
-                                    ?>
-                                    <option value="<?php echo $matieres[$i]; ?>"><?php echo $matieres[$i]; ?></option>
-                                    <?php
+                    <div class="row">
+                        <select name="matiere-select" class="form-control col-12" id="matiere-select" form="regex-form">
+                            <?php
+                                if($matieres!=null){
+                                    for($i=0; $i<count($matieres); $i++){
+                                        ?>
+                                        <option value="<?php echo $matieres[$i]; ?>"><?php echo $matieres[$i]; ?></option>
+                                        <?php
+                                    }
                                 }
-                            }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
             </div>
             <div class="row sph-row">
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-10 col-md-8 col-lg-6 sph-col-textarea">
-                    <textarea name="regex-textarea" rows="10" cols="50"><?php if($regex!=null){ echo $regex; } ?></textarea>
+                    <div class="row">
+                        <textarea name="regex-textarea" class="form-control" rows="10" cols="50"><?php if($regex!=null){ echo $regex; } ?></textarea>
+                    </div>
                 </div>
                 <div class="col-xs-1 col-md-2 col-lg-3"></div>
             </div>
