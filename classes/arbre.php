@@ -91,7 +91,7 @@
          */
         function afficher(){
             $noeud_temp = $this->_noeud_racine;
-            while($noeud_temp->get_fils!=null){
+            while($noeud_temp->get_fils()!=null){
                 var_dump($noeud_temp);
             }
         }
