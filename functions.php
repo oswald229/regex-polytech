@@ -104,7 +104,7 @@ function replace_diff($s1,$s2){
  */
 function parse_fichier($nom_fichier){
 	$events_array = [];
-	if(!is_null($nom_fichier)||!is_empty($nom_fichier)){
+	if(!is_null($nom_fichier)||!empty($nom_fichier)){
 		$timetable = fopen($nom_fichier, "r");//"timetable (copie).txt"
 		
 		if ($timetable) {
@@ -149,10 +149,10 @@ function parse_fichier($nom_fichier){
  */
 function get_par_matiere($tab){
 	$parMatiere=[];
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		foreach ($tab as $key => $event) {
 			$tab_keys = array_keys($parMatiere);
-			if(!check_array($tab_keys, $event->getMatiere())){
+			if(!check_array($tab_keys, to_case_and_accent_insensitive($event->getMatiere()))){
 				$parMatiere[to_case_and_accent_insensitive($event->getMatiere())]=[];
 				array_push($parMatiere[to_case_and_accent_insensitive($event->getMatiere())],$event);
 			}else{
@@ -190,7 +190,7 @@ function check_array($array, $string){
  */
 function get_matieres($tab){
 	$communMatiereArray=[];
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		foreach ($tab as $value) {
 			$matiereCourant=$value->getMatiere();
 			if(!check_array($communMatiereArray, $matiereCourant)){//array_search(strtolower($matiereCourant),array_map('strtolower', $communMatiereArray)
@@ -206,7 +206,7 @@ function get_matieres($tab){
  */
 function get_types($tab){//$parMatiere['Reseaux industriels']
 	$communTypeArray=[];
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		foreach ($tab as $value) {
 			$typeCourant=$value->getType();
 		
@@ -225,7 +225,7 @@ function get_types($tab){//$parMatiere['Reseaux industriels']
  */
 function get_groupes($tab){
 	$communGroupeArray=[];
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		foreach ($tab as $value) {
 			$groupeCourant=$value->getGroupe();
 		
@@ -244,7 +244,7 @@ function get_groupes($tab){
  */
 function get_localisations($tab){
 	$communLocalisationArray=[];
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		foreach ($tab as $value) {
 			$localisationCourant=$value->getLocalisation();
 		
@@ -263,7 +263,7 @@ function get_localisations($tab){
 function split_par_espace($tab){
 	$tab_splitte = [];
 	$i=0;
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		foreach($tab as $val){
 			$split_temp = explode(" ", $val);
 			array_push($tab_splitte, []);
@@ -282,7 +282,7 @@ function split_par_espace($tab){
  * @param tab Indique le tableau à convertir
  */
 function add_to_arbre($arbre, $tab){
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		$tab_splitte = split_par_espace($tab);
 		for($i=0; $i<count($tab_splitte); $i++){
 			$noeud = new noeud($tab_splitte[$i][0], null);
@@ -306,7 +306,7 @@ function add_to_arbre($arbre, $tab){
  */
 function get_regexp($tab){
 	$regex = "^";
-	if(!is_null($tab) || !is_empty($tab)){
+	if(!is_null($tab) || !empty($tab)){
 		$matieres = get_matieres($tab);
 		$arbre_matiere = new arbre("Arbre Matière", null);
 		add_to_arbre($arbre_matiere, $matieres);
@@ -335,11 +335,11 @@ function count_slash($chaine){
 }
 
 
-/*$events_array = parse_fichier("file/timetable (copie).txt");
+$events_array = parse_fichier("file/timetable (copie).txt");
 
 $parMatiere = get_par_matiere($events_array);
 
-echo "<h3>Regexp ensemble</h3>";
+/*echo "<h3>Regexp ensemble</h3>";
 $regex = get_regexp($events_array);
 
 echo $regex;
@@ -348,5 +348,13 @@ echo "<h3>Regexp Securite informatique</h3>";
 $regex = get_regexp($parMatiere['Securite informatique']);
 
 echo $regex;*/
+
+$matieres = get_matieres($parMatiere['securiteinformatique']);
+$arbre_matiere = new arbre("Arbre Matière", null);
+add_to_arbre($arbre_matiere, $matieres);
+
+var_dump($arbre_matiere->get_liste_noeuds());
+
+//var_dump($parMatiere['securiteinformatique']);
 
 ?>

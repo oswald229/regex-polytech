@@ -11,6 +11,7 @@
          * Indique la liste des noeuds composant l'arbre dans un ordre aléatoire
          */
         private $_liste_noeuds;
+        private $_regexp = [];
         /**
          * Le constructeur de l'arbre
          * @param nom_arbre Le nom de l'arbre qui sera le nom du noeud racine
@@ -139,6 +140,10 @@
                 }
             }
             return $regex;
+        }
+
+        function get_regexp_1(){
+            
         }
     }
 ?>
