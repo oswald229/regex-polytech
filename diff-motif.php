@@ -13,6 +13,7 @@ function usingStaticMotifDiffSize($strTab){
 	}		
 	return array($motif);
 }
+function clean($str){return trim(preg_replace('/\s+/', ' ', $str));}
 
 for ($i=0; $i < sizeof($stringTab) ; $i++) { 
 	
