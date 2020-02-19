@@ -148,7 +148,7 @@
          *           => Expression régulière : TP (Spe |Imp )
          */
         function get_regexp(){
-            $regex = $this->_libelle . " ";
+            $regex = $this->_libelle." ";
             $fils = $this->get_fils();
             if($fils!=null){
                 if(count($fils)==1){

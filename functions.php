@@ -167,9 +167,12 @@ function get_par_matiere($tab){
  * @param string Indique le tableau d'events à trier
  */
 function to_case_and_accent_insensitive($string){
-	$temp_string = strtolower($string);
-	$trans = array("é" => "e", "&eacute;" => "e", "&aacute;" => "a", "á" => "a", "&iacute;" => "i","í"=>"i", "ó"=>"o", "&oacute;" => "o", "&uacute;" => "u", "ú"=>"u","&ouml;" => "u", "ü"=>"u", "et" => "&", " "=>"");
-	$temp_string = strtr($temp_string,$trans);
+	$temp_string = "";
+	if(isset($string)){
+		$temp_string =strtolower($string);
+		$trans = array("é" => "e", "&eacute;" => "e", "&aacute;" => "a", "á" => "a", "&iacute;" => "i","í"=>"i", "ó"=>"o", "&oacute;" => "o", "&uacute;" => "u", "ú"=>"u","&ouml;" => "u", "ü"=>"u", "et" => "&", " "=>"");
+		$temp_string = strtr($temp_string,$trans);
+	}
 	return $temp_string;
 }
 
@@ -183,6 +186,8 @@ function check_array($array, $string){
 	}
 	return false;
  }
+
+
 
 /**
  * Permet de récupérer les matières de tous les events d'une liste d'events. La récupération se fait de manière à ce qu'il n'y ait pas de doublure
@@ -276,26 +281,37 @@ function split_par_espace($tab){
 	}
 	return $tab_splitte;
 }
+
 /**
  * Permet de convertir un tableau en arbre en tenant compte de l'unicité de chaque élément à chaque rang de l'arbre et en découpant les éléments (chaînes de caractères) contenant d'espace
  * @param arbre Indique l'arbre à générer
  * @param tab Indique le tableau à convertir
  */
-function add_to_arbre($arbre, $tab){
+function add_to_arbre($arbre, $tab, $split_by_space){
 	if(!is_null($tab) || !empty($tab)){
-		$tab_splitte = split_par_espace($tab);
+		$tab_splitte = $tab;
+		if($split_by_space==true){
+			$tab_splitte = split_par_espace($tab);
+		}
 		for($i=0; $i<count($tab_splitte); $i++){
-			$noeud = new noeud($tab_splitte[$i][0], null);
+			$noeud = null;
+			if(is_array($tab_splitte[$i])){
+				$noeud = new noeud($tab_splitte[$i][0], null);
+			}else{
+				$noeud = new noeud($tab_splitte[$i], null);
+			}
 			$arbre->add_noeud_niveau_0($noeud);
 		}
 		for($i=0; $i<count($tab_splitte); $i++){
-			for($j=1; $j<count($tab_splitte[$i]); $j++){
-				$tab_temp = [];
-				for($k=0; $k<$j; $k++){
-					array_push($tab_temp, $tab_splitte[$i][$k]);
+			if(is_array($tab_splitte[$i])){
+				for($j=1; $j<count($tab_splitte[$i]); $j++){
+					$tab_temp = [];
+					for($k=0; $k<$j; $k++){
+						array_push($tab_temp, $tab_splitte[$i][$k]);
+					}
+					$noeud = new noeud($tab_splitte[$i][$j], null);
+					$arbre->add_node($tab_temp, $noeud);
 				}
-				$noeud = new noeud($tab_splitte[$i][$j], null);
-				$arbre->add_node($tab_temp, $noeud);
 			}
 		}
 	}
@@ -334,6 +350,41 @@ function count_slash($chaine){
 	return $compteur;
 }
 
+function get_unique($tab){
+	$unique = [];
+	if(!is_null($tab) || !empty($tab)){
+		foreach($tab as $value){
+			if(!check_array($unique, $value)){
+				array_push($unique, $value);
+			}
+		}
+	}
+	return $unique;
+}
+
+function get_commun($tab){
+	$ret="";
+	if($tab!=null){
+		$ref=$tab[0];
+		for($i=1;$i<count($tab);$i++){
+			if(strlen($ref)>strlen($tab[$i])){
+				$ref=$tab[$i];
+			}
+		}
+		for($i=0;$i<strlen($ref);$i++){
+			$compteur=0;
+			for($j=0;$j<count($tab);$j++){
+				if(strcmp($ref[$i], $tab[$j][$i])==0){
+					$compteur++;
+				}
+			}
+			if($compteur==count($tab)){
+				$ret=$ret.$ref[$i];
+			}
+		}
+	}
+	return $ret;
+}
 
 $events_array = parse_fichier("file/timetable (copie).txt");
 
@@ -349,11 +400,27 @@ $regex = get_regexp($parMatiere['Securite informatique']);
 
 echo $regex;*/
 
-$matieres = get_matieres($parMatiere['securiteinformatique']);
+//On s'est arrêté ici
+$matieres = get_groupes($parMatiere['reseauxindustriels']);
 $arbre_matiere = new arbre("Arbre Matière", null);
-add_to_arbre($arbre_matiere, $matieres);
+add_to_arbre($arbre_matiere, $matieres, false);
 
-var_dump($arbre_matiere->get_liste_noeuds());
+$arbre_matiere->make_regexp();
+
+echo "Salles";
+var_dump($matieres);
+
+echo "Expressions régulières";
+
+echo "<br>";
+
+$array = $arbre_matiere->get_regexp_1();
+
+for($i=0; $i<count($array); $i++){
+	echo 'Solution '.strval($i+1)." : ".$array[$i];
+	echo "<br>";
+	echo "<br>";
+}
 
 //var_dump($parMatiere['securiteinformatique']);
 

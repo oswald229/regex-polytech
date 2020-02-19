@@ -101,10 +101,10 @@
          */
         function get_regexp(){
             $fils = $this->_noeud_racine->get_fils();
-            $regex="";
-            if(count($fils)==1){
+            $regex="^";
+            if($fils!=null && count($fils)==1){
                 $regex = $regex . $fils[0]->get_regexp();
-            }else if(count($fils)>1){
+            }else if($fils!=null && count($fils)>1){
                 $compteurVide=0;
                 foreach($fils as $filsValue){
                     if(strcmp($filsValue->get_libelle(), "")==0){
@@ -142,8 +142,68 @@
             return $regex;
         }
 
+        function make_regexp(){
+            $fils=$this->_noeud_racine->get_fils();
+            $num=0;
+            while($fils!=null){
+                //array_push($this->_regexp, []);
+                $i=0;
+                $temp="";
+                if($fils[0]->get_rang()==0){
+                    $temp = $temp."^";
+                }
+                if(count($fils)>1){
+                    $temp = $temp."(";
+                }
+                foreach($fils as $val_fils){
+                    if($i!=0){
+                        $temp = $temp."|";
+                    }
+                    $temp = $temp.$val_fils->get_libelle();
+                    $i++;
+                }
+                if(count($fils)>1){
+                    $temp = $temp.")";
+                }
+                $fils_string = [];
+                foreach($fils as $val_fils){
+                    array_push($fils_string, $val_fils->get_libelle());
+                }
+                if(count($fils)!=1 && count(get_unique($fils_string))>1){
+                    $deb_temp="";
+                    if($fils[0]->get_rang()==0){
+                        $deb_temp = $deb_temp."^";
+                    }
+                    $deb_temp = $deb_temp.".*";
+                    array_push($this->_regexp, trim($deb_temp));
+                }
+                if(isset($temp) && strcmp($temp, "")!=0){
+                    array_push($this->_regexp, trim($temp));
+                }
+                $arbre = new arbre("Arbre".strval($num), null);
+                add_to_arbre($arbre, $fils_string, true);
+                $reg = $arbre->get_regexp();
+                if(isset($reg) && strcmp($reg, "")!=0){
+                    array_push($this->_regexp, trim($reg));
+                }
+                $temp_fils = [];
+                foreach($fils as $val_fils){
+                    if($val_fils->get_fils()!=null){
+                        foreach($val_fils->get_fils() as $val){
+                            if(strcmp($val->get_libelle(), " ")!==0){
+                                array_push($temp_fils, $val);
+                            }
+                        }
+                    }
+                }
+                $fils=$temp_fils;
+                $num++;
+            }
+            $this->_regexp = get_unique($this->_regexp);
+        }
+
         function get_regexp_1(){
-            
+            return $this->_regexp;
         }
     }
 ?>
