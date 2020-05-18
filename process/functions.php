@@ -297,7 +297,7 @@ function get_regexp($tab){
 	$localisations = get_localisations($tab);
 	$arbre_localisation = new arbre("Arbre Localisation", null);
 	add_to_arbre($arbre_localisation, $localisations);
-	$regex = $regex . $arbre_type->get_regexp() . " - " . $arbre_localisation->get_regexp() . " - " . $arbre_matiere->get_regexp() . " - " . $arbre_groupe->get_regexp()."$";
+	$regex = trim($regex ). trim($arbre_type->get_regexp()) . " - " . trim($arbre_localisation->get_regexp()) . " - " . trim($arbre_matiere->get_regexp()) . " - " . trim($arbre_groupe->get_regexp())."$";
 	return $regex;
 }
 
